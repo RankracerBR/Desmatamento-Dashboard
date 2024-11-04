@@ -2,36 +2,33 @@ import streamlit as st
 import pandas as pd
 import plotly.express as px
 
+
 DIR = 'venv/dataset/deforestation.csv'
 
-st.title("World Map of Forest Coverage Changes (2000-2020)")
+st.title('Desmatamento(Mapa)')
 
-# Load the data
-load_ = pd.read_csv(DIR)
+fig = pd.read_csv(DIR)
 
-# Choose whether to display forest coverage or trend
-option = st.selectbox("Select Data to Display:", ["Forest Coverage 2020", "Trend Change (2000-2020)"])
+botao_opcoes = st.selectbox('Selecione o Ano', ["Cobertura Florestal 2020", "Mudança Trend(2000-2020)"])
 
-# Set up color scale and data for map based on user selection
-if option == "Forest Coverage 2020":
-    fig = px.choropleth(load_, locations="iso3c", color="forests_2020",
-                        title="Forest Coverage in 2020 (%) by Country",
-                        color_continuous_scale="Greens",
-                        range_color=[0, 100],
-                        labels={"forests_2020": "Forest Coverage (%)"})
+if botao_opcoes == 'Cobertura Florestal 2020':
+    fig_ = px.choropleth(fig, locations='iso3c', color='forests_2020',
+                         title='Cobertura Florestal 2020 (%) por País',
+                         color_continuous_scale='Greens',
+                         range_color=[0, 100],
+                         labels={"forests_2020": "Cobertura Florestal(%)"})
+
 else:
-    fig = px.choropleth(load_, locations="iso3c", color="trend",
-                        title="Trend Change in Forest Coverage (2000-2020) by Country",
-                        color_continuous_scale="RdYlGn",
-                        range_color=[-20, 20],
-                        labels={"trend": "Change in Forest Area (%)"})
+    fig_ = px.choropleth(fig, locations='iso3c', color='forests_2020',
+                         title='Cobertura Florestal 2000-2020 (%) por País',
+                         color_continuous_scale='RdYlGn',
+                         range_color=[-20,20],
+                         labels={"trend": "Cobertura Florestal(%)"})
 
-# Customize layout
-fig.update_geos(showcoastlines=True, coastlinecolor="Black", projection_type="natural earth")
-fig.update_layout(
-    coloraxis_colorbar=dict(title="Forest Coverage (%)" if option == "Forest Coverage 2020" else "Trend Change (%)"),
+fig_.update_geos(showcoastlines=True, coastlinecolor='Black', projection_type='natural earth')
+fig_.update_layout(
+    coloraxis_colorbar=dict(title='Cobertura Florestal (%)' if botao_opcoes == 'Cobertura Florestal 2020' else 'Trend (%)'),
     geo=dict(showframe=False, showcoastlines=True)
 )
 
-# Display the map
-st.plotly_chart(fig)
+st.plotly_chart(fig_)
